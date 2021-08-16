@@ -2,7 +2,7 @@
   "_args": [
     [
       "@fortawesome/fontawesome-free@5.15.3",
-      "C:\\swkim\\pose-estimation-similarity"
+      "C:\\swkim\\bootstrap"
     ]
   ],
   "_from": "@fortawesome/fontawesome-free@5.15.3",
@@ -27,7 +27,7 @@
   ],
   "_resolved": "https://registry.npmjs.org/@fortawesome/fontawesome-free/-/fontawesome-free-5.15.3.tgz",
   "_spec": "5.15.3",
-  "_where": "C:\\swkim\\pose-estimation-similarity",
+  "_where": "C:\\swkim\\bootstrap",
   "author": {
     "name": "Dave Gandy",
     "email": "dave@fontawesome.com",

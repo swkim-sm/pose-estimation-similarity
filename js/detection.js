@@ -57,7 +57,7 @@ async function capture() {
     // context 용도 다시 찾기
     var context = canvasWebcam.getContext('2d').drawImage(webcam, 0, 0, canvasWebcam.width, canvasWebcam.height);
     webcamPose = await detector.estimatePoses(canvasWebcam);
-    // console.log("webcam detect : ", webcamPose);
+    console.log("webcam detect : ", webcamPose);
     window.requestAnimationFrame(capture);
 }
 
