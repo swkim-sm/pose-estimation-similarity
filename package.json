@@ -32,7 +32,11 @@
     },
     "dependencies": {
         "@fortawesome/fontawesome-free": "5.15.3",
-        "@tensorflow-models/pose-detection": "^0.0.4",
+        "@tensorflow-models/pose-detection": "0.0.4",
+        "@tensorflow/tfjs-backend-wasm": "^3.8.0",
+        "@tensorflow/tfjs-backend-webgl": "^3.8.0",
+        "@tensorflow/tfjs-converter": "^3.8.0",
+        "@tensorflow/tfjs-core": "^3.8.0",
         "bootstrap": "4.6.0",
         "chart.js": "2.9.4",
         "datatables.net-bs4": "1.10.24",
@@ -49,7 +53,7 @@
         "gulp-header": "2.0.9",
         "gulp-plumber": "^1.2.1",
         "gulp-rename": "2.0.0",
-        "gulp-sass": "4.1.0",
+        "gulp-sass": "^5.0.0",
         "gulp-uglify": "3.0.2",
         "merge-stream": "2.0.0"
     }
