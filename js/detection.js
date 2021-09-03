@@ -17,17 +17,20 @@ canvasVideo.height = video.offsetHeight;
 // let detectorConfig, detector, context;
 let detectorConfig, detector;
 var videoPose, webcamPose;
+var weightedDistance;
 
 console.log(canvasVideo.width, canvasVideo.height)
-
+var compareFlag = false;
 
 // video play and pause
 function playVideo() { 
     video.play();
+    compareFlag = true;
     window.requestAnimationFrame(captureVideo);
   } 
   function pauseVideo() { 
     video.pause(); 
+    compareFlag = false;
   } 
 
 
@@ -49,16 +52,39 @@ window.onload = async function () {
         console.log("Something went wrong!");
     });
 
-    window.requestAnimationFrame(capture);
+    // distance test code
+    // var img1 = document.getElementById("compare1");
+    // var img2 = document.getElementById("compare2");
+    // var pose1 = await detector.estimatePoses(img1);
+    // var pose2 = await detector.estimatePoses(img2);
+
+    // if(pose1.length > 0 && pose2.length > 0){
+    //     var testweightedDistance = poseSimilarity(pose1[0].keypoints, pose2[0].keypoints);
+    //     console.log("distance : ", testweightedDistance);
+    // }
+
+
+    // window.requestAnimationFrame(capture);
 }
+
 
 
 async function capture() {
     // context 용도 다시 찾기
     var context = canvasWebcam.getContext('2d').drawImage(webcam, 0, 0, canvasWebcam.width, canvasWebcam.height);
     webcamPose = await detector.estimatePoses(canvasWebcam);
+
     // console.log("webcam detect : ", webcamPose);
-    window.requestAnimationFrame(capture);
+    // window.requestAnimationFrame(capture);
+
+    // if( webcamPose.length > 0){
+    //     weightedDistance = poseSimilarity(webcamPose[0].keypoints, webcamPose[0].keypoints);
+    //     console.log("distance : ", weightedDistance);
+    // // }
+    // if (compareFlag){
+    //     console.log("webcam detect : ", webcamPose[0].keypoints);
+    //     window.requestAnimationFrame(capture);
+    // }
 }
 
 // const WeightOption = {
@@ -76,10 +102,21 @@ async function captureVideo() {
     videoPose = await detector.estimatePoses(canvasVideo);
     // console.log("video detect : ", videoPose[0].keypoints);
 
-    var weightedDistance = poseSimilarity(webcamPose[0].keypoints, videoPose[0].keypoints);
+    // if(videoPose.length > 0 && webcamPose.length > 0){
+    //     weightedDistance = poseSimilarity(webcamPose[0].keypoints, videoPose[0].keypoints);
+    //     console.log("distance : ", weightedDistance);
+    // }
+    // window.requestAnimationFrame(captureVideo);
 
-    console.log(weightedDistance);
-    window.requestAnimationFrame(captureVideo);
+    if(compareFlag){
+        window.requestAnimationFrame(capture);
+        window.requestAnimationFrame(captureVideo);
+        console.log("detect : ", videoPose[0].keypoints, webcamPose[0].keypoints);
+        if(videoPose.length > 0 && webcamPose.length > 0){
+            weightedDistance = poseSimilarity(webcamPose[0].keypoints, videoPose[0].keypoints);
+            console.log("distance : ", weightedDistance);
+        }
+    }
 }
 
 function weightedDistanceMatching(vectorPose1XY, vectorPose2XY, vectorConfidences){
@@ -104,7 +141,7 @@ function convertPoseToVector(pose) {
     var vectorScores = [];
 
     // get weightOption if exists
-    var mode = 'multiply'
+    var mode = 'add'
     var scores = Array;
 
     pose.forEach(function (point, index) {
@@ -191,6 +228,7 @@ function poseSimilarity(pose1, pose2) {
     vectorPose1Scores = _a[1];
 
     var vectorPose2XY = vectorizeAndNormalize(pose2)[0];
+    console.log("compare", vectorPose1XY, vectorPose2XY)
     // execute strategy
     // if strategy is given by the string form
     return weightedDistanceMatching(vectorPose1XY, vectorPose2XY, vectorPose1Scores);
