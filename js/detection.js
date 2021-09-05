@@ -18,19 +18,18 @@ canvasVideo.height = video.offsetHeight;
 let detectorConfig, detector;
 var videoPose, webcamPose;
 var weightedDistance;
+var videoFlag = false
 
-console.log(canvasVideo.width, canvasVideo.height)
-var compareFlag = false;
 
 // video play and pause
 function playVideo() { 
     video.play();
-    compareFlag = true;
     window.requestAnimationFrame(captureVideo);
+    videoFlag = true
   } 
   function pauseVideo() { 
     video.pause(); 
-    compareFlag = false;
+    videoFlag = false
   } 
 
 
@@ -64,7 +63,7 @@ window.onload = async function () {
     // }
 
 
-    // window.requestAnimationFrame(capture);
+    window.requestAnimationFrame(capture);
 }
 
 
@@ -75,7 +74,7 @@ async function capture() {
     webcamPose = await detector.estimatePoses(canvasWebcam);
 
     // console.log("webcam detect : ", webcamPose);
-    // window.requestAnimationFrame(capture);
+    window.requestAnimationFrame(capture);
 
     // if( webcamPose.length > 0){
     //     weightedDistance = poseSimilarity(webcamPose[0].keypoints, webcamPose[0].keypoints);
@@ -102,21 +101,13 @@ async function captureVideo() {
     videoPose = await detector.estimatePoses(canvasVideo);
     // console.log("video detect : ", videoPose[0].keypoints);
 
-    // if(videoPose.length > 0 && webcamPose.length > 0){
-    //     weightedDistance = poseSimilarity(webcamPose[0].keypoints, videoPose[0].keypoints);
-    //     console.log("distance : ", weightedDistance);
-    // }
-    // window.requestAnimationFrame(captureVideo);
-
-    if(compareFlag){
-        window.requestAnimationFrame(capture);
-        window.requestAnimationFrame(captureVideo);
-        console.log("detect : ", videoPose[0].keypoints, webcamPose[0].keypoints);
-        if(videoPose.length > 0 && webcamPose.length > 0){
-            weightedDistance = poseSimilarity(webcamPose[0].keypoints, videoPose[0].keypoints);
-            console.log("distance : ", weightedDistance);
-        }
+    if(videoPose.length > 0 && webcamPose.length > 0){
+        console.log("video detect : ", videoPose[0].keypoints);
+        weightedDistance = poseSimilarity(webcamPose[0].keypoints, videoPose[0].keypoints);
+        console.log("distance : ", weightedDistance);
     }
+    if(videoFlag){window.requestAnimationFrame(captureVideo);}
+
 }
 
 function weightedDistanceMatching(vectorPose1XY, vectorPose2XY, vectorConfidences){
