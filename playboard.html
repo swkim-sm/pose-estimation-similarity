@@ -523,9 +523,7 @@
 
     <!-- Require the peer dependencies of pose-detection. -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter"></script>
-
 
     <!-- You must explicitly require a TF.js backend if you're not using the TF.js union bundle. -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
@@ -537,10 +535,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stats.js/r16/Stats.min.js"></script>
 
     <script type="module" src="./js/detection.js"></script>
-
-    <!-- <script type="module" src="js/index.js"></script> -->
-
-    <!-- <script src="js/movenet_test.js"></script> -->
+    <script>
+        function playVideo() {
+            video.play();
+            // window.requestAnimationFrame(captureVideo);
+        }
+        function pauseVideo() {
+            video.pause();
+}
+    </script>
 
 </body>
 

@@ -14,9 +14,9 @@ import { setupStats } from './stats_panel.js';
 import { setBackendAndEnvFlags } from './util.js';
 
 let detector, camera, stats;
-let rafId;
-let detectorConfig;
-let videoPoses, webcamPoses;
+let rafId, videoContext;
+// let detectorConfig;
+// let videoPoses, webcamPoses;
 let startInferenceTime, numInferences = 0;
 let inferenceTimeSum = 0, lastPanelUpdate = 0;
 
@@ -24,9 +24,15 @@ let inferenceTimeSum = 0, lastPanelUpdate = 0;
 var video = document.getElementById("video");
 var canvasVideo = document.createElement('canvas');
 
+canvasVideo.width = video.offsetWidth;
+canvasVideo.height = video.offsetHeight;
+
 // varients for webcam
 var webcam = document.getElementById('webcam');
 var canvasWebcam = document.createElement('output');
+
+var weightedDistance;
+var webcamPoses, videoPoses;
 
 
 // // canvas size
@@ -41,14 +47,14 @@ var canvasWebcam = document.createElement('output');
 // console.log(canvasVideo.width, canvasVideo.height)
 
 
-// video play and pause
-function playVideo() {
-    video.play();
-    window.requestAnimationFrame(captureVideo);
-}
-function pauseVideo() {
-    video.pause();
-}
+// // video play and pause
+// function playVideo() {
+//     video.play();
+//     window.requestAnimationFrame(captureVideo);
+// }
+// function pauseVideo() {
+//     video.pause();
+// }
 
 
 // called automatically when the page is loaded
@@ -108,9 +114,12 @@ async function renderResult() {
     // FPS only counts the time it takes to finish estimatePoses.
     beginEstimatePosesStats();
 
-    const webcamPoses = await detector.estimatePoses(
+    webcamPoses = await detector.estimatePoses(
         camera.webcam,
-        { maxPoses: STATE.modelConfig.maxPoses, flipHorizontal: false });
+        { flipHorizontal: false });
+
+//maxPoses: STATE.modelConfig.maxPoses,
+    videoPoses = await detector.estimatePoses(video, {flipHorizontal: false });
 
     endEstimatePosesStats();
 
@@ -121,6 +130,12 @@ async function renderResult() {
     // which shouldn't be rendered.
     if (webcamPoses.length > 0 && !STATE.isModelChanged) {
         camera.drawResults(webcamPoses);
+
+        if(videoPoses.length > 0){
+            weightedDistance = poseSimilarity(videoPoses[0].keypoints, webcamPoses[0].keypoints);
+            console.log("weight:", weightedDistance);
+        }
+
     }
 }
 
@@ -144,40 +159,12 @@ async function app() {
 };
 
 
-
-async function capture() {
-    // let drawWebcamImage = canvasWebcam.getContext('2d').drawImage(webcam, 0, 0, canvasWebcam.width, canvasWebcam.height);
-    webcamPoses = await detector.estimatePoses(camera.webcam, { maxPoses: STATE.modelConfig.maxPoses, flipHorizontal: false });
-    // console.log("webcam detect : ", webcamPoses);
-    window.requestAnimationFrame(capture);
-}
-
-// const WeightOption = {
-//     mode: 'multiply',
-//     scores: Object | number[]
-// };
-// const Options = {
-//     strategy: 'weightedDistance',
-//     customWeight: WeightOption
-// };
-
-async function captureVideo() {
-    // let drawVideoImage = canvasVideo.getContext('2d').drawImage(video, 0, 0, canvasVideo.width, canvasVideo.height);
-    videoPoses = await detector.estimatePoses(video, { maxPoses: STATE.modelConfig.maxPoses, flipHorizontal: false });
-    // console.log("video detect : ", videoPoses[0].keypoints);
-
-    weightedDistance = poseSimilarity(webcamPoses[0].keypoints, videoPoses[0].keypoints);
-
-    console.log(weightedDistance);
-    window.requestAnimationFrame(captureVideo);
-}
-
-function weightedDistanceMatching(vectorPose1XY, vectorPose2XY, vectorConfidences) {
-    const summation1 = 1 / vectorConfidences[vectorConfidences.length - 1];
+function weightedDistanceMatching(vectorPose1XY, vectorPose2XY, vectorConfidences){
+    const summation1 = 1/vectorConfidences[vectorConfidences.length -1];
     var summation2 = 0;
 
-    for (var i = 0; i < vectorPose1XY.length; i++) {
-        var confIndex = Math.floor(i / 2);
+    for (var i = 0; i<vectorPose1XY.length; i++){
+        var confIndex = Math.floor(i/2); 
         summation2 += vectorConfidences[confIndex] * Math.abs(vectorPose1XY[i] - vectorPose2XY[i]);
     }
     return summation1 * summation2;
@@ -189,12 +176,12 @@ function convertPoseToVector(pose) {
     var translateX = Number.POSITIVE_INFINITY;
     var translateY = Number.POSITIVE_INFINITY;
     var scaler = Number.NEGATIVE_INFINITY;
-
+    
     var vectorScoresSum = 0;
     var vectorScores = [];
 
     // get weightOption if exists
-    var mode = 'multiply'
+    var mode = 'add'
     var scores = Array;
 
     pose.forEach(function (point, index) {
@@ -257,15 +244,14 @@ function L2Normalization(vectorPoseXY) {
     });
     absVectorPoseXY = Math.sqrt(absVectorPoseXY);
     return vectorPoseXY.map(function (position) {
-        return position / absVectorPoseXY; s
+        return position / absVectorPoseXY;s
     });
 }
-function vectorizeAndNormalize(pose) {
+function vectorizeAndNormalize(pose){
     var _a = convertPoseToVector(pose);
-
-    vectorPoseXY = _a[0];
-    vectorPoseTransform = _a[1];
-    vectorPoseConfidences = _a[2];
+    var vectorPoseXY = _a[0];
+    var vectorPoseTransform = _a[1];
+    var vectorPoseConfidences = _a[2];
 
     vectorPoseXY = scaleAndTranslate(vectorPoseXY, vectorPoseTransform);
 
@@ -277,13 +263,15 @@ function vectorizeAndNormalize(pose) {
 function poseSimilarity(pose1, pose2) {
     // merge options
     var _a = vectorizeAndNormalize(pose1)
-    vectorPose1XY = _a[0];
-    vectorPose1Scores = _a[1];
+    var vectorPose1XY = _a[0];
+    var vectorPose1Scores = _a[1];
+    // console.log("pose1", pose1);
+    // console.log("pose2", pose2);
 
     var vectorPose2XY = vectorizeAndNormalize(pose2)[0];
+    // console.log("compare", vectorPose1XY, vectorPose2XY)
     // execute strategy
     // if strategy is given by the string form
     return weightedDistanceMatching(vectorPose1XY, vectorPose2XY, vectorPose1Scores);
 }
-
 app();
