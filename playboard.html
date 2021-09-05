@@ -24,6 +24,8 @@
 
 <body id="page-top">
 
+    <div id="stats"></div>
+
     <!-- Page Wrapper -->
     <div id="wrapper">
 
@@ -148,7 +150,7 @@
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
             </div>
 
-        </ul> 
+        </ul>
         <!-- End of Sidebar -->
 
         <!-- Content Wrapper -->
@@ -273,8 +275,7 @@
                                 </h6>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
                                     <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_1.svg"
-                                            alt="...">
+                                        <img class="rounded-circle" src="img/undraw_profile_1.svg" alt="...">
                                         <div class="status-indicator bg-success"></div>
                                     </div>
                                     <div class="font-weight-bold">
@@ -285,8 +286,7 @@
                                 </a>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
                                     <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_2.svg"
-                                            alt="...">
+                                        <img class="rounded-circle" src="img/undraw_profile_2.svg" alt="...">
                                         <div class="status-indicator"></div>
                                     </div>
                                     <div>
@@ -297,8 +297,7 @@
                                 </a>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
                                     <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_3.svg"
-                                            alt="...">
+                                        <img class="rounded-circle" src="img/undraw_profile_3.svg" alt="...">
                                         <div class="status-indicator bg-warning"></div>
                                     </div>
                                     <div>
@@ -330,8 +329,7 @@
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
-                                <img class="img-profile rounded-circle"
-                                    src="img/undraw_profile.svg">
+                                <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -400,13 +398,14 @@
                                 <!-- Card Body -->
                                 <div class="card-body">
                                     <!-- <div class="chart-area"> -->
-                                        <!-- <canvas id="myAreaChart"> -->
-                                            <video id="video" width=100% height=100% crossorigin='anonymous'>
-                                                <source src="video/video.mp4" type="video/mp4" crossorigin='anonymous'>
-                                              
-                                                HTML5 video
-                                              </video>
-                                        <!-- </canvas> -->
+                                    <!-- <canvas id="myAreaChart"> -->
+
+                                    <video id="video" width=100% height=100% crossorigin='anonymous'>
+                                        <source src="video/video.mp4" type="video/mp4" crossorigin='anonymous'>
+
+                                        HTML5 video
+                                    </video>
+                                    <!-- </canvas> -->
                                     <!-- </div> -->
                                     <a href="#" onclick="playVideo()" class="btn btn-primary btn-icon-split btn-lg">
                                         <span class="icon text-white-50">
@@ -414,7 +413,7 @@
                                         </span>
                                         <span class="text">Play & Dance</span>
                                     </a>
-                            
+
                                     <a href="#" onclick="pauseVideo()" class="btn btn-danger btn-circle btn-sm">
                                         <i class="fas fa-exclamation-triangle"></i>
                                     </a>
@@ -444,18 +443,19 @@
                                     </div>
                                 </div>
                                 <!-- Card Body -->
-                                <div class="card-body">
-            
+                                <div class="canvas-wrapper">
+                                    <canvas id="output"></canvas>
                                     <video id="webcam" autoplay playsinline style="
                                     -webkit-transform: scaleX(-1);
                                     transform: scaleX(-1);
-                                    width: 100%;
-                                    height: 100%;
+                                    visibility: hidden;
+                                    width: auto;
+                                    height: auto;
                                     "></video>
-        
                                 </div>
                             </div>
                         </div>
+                    </div>
 
                 </div>
                 <!-- /.container-fluid -->
@@ -523,16 +523,25 @@
 
     <!-- Require the peer dependencies of pose-detection. -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter"></script>
+
 
     <!-- You must explicitly require a TF.js backend if you're not using the TF.js union bundle. -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
     <!-- Alternatively you can use the WASM backend: <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm/dist/tf-backend-wasm.js"></script> -->
 
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection"></script>
-    <script src="js/detection.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.6/dat.gui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stats.js/r16/Stats.min.js"></script>
+
+    <script type="module" src="./js/detection.js"></script>
+
+    <!-- <script type="module" src="js/index.js"></script> -->
+
     <!-- <script src="js/movenet_test.js"></script> -->
-    
+
 </body>
 
 </html>
