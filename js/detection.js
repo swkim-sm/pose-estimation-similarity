@@ -1,63 +1,154 @@
+// import '@tensorflow/tfjs-backend-webgl';
+// import '@mediapipe/pose';
+
+// import * as tfjsWasm from '@tensorflow/tfjs-backend-wasm';
+
+// tfjsWasm.setWasmPaths(
+// `https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm@${tfjsWasm.version_wasm}/dist/`);
+
+// import * as posedetection from '@tensorflow-models/pose-detection';
+
+import { Camera } from './camera.js';
+import { STATE } from './params.js';
+import { setupStats } from './stats_panel.js';
+import { setBackendAndEnvFlags } from './util.js';
+
+let detector, camera, stats;
+let rafId;
+let detectorConfig;
+let videoPoses, webcamPoses;
+let startInferenceTime, numInferences = 0;
+let inferenceTimeSum = 0, lastPanelUpdate = 0;
+
 // varients for video
 var video = document.getElementById("video");
 var canvasVideo = document.createElement('canvas');
 
 // varients for webcam
 var webcam = document.getElementById('webcam');
-var canvasWebcam = document.createElement('canvas');
+var canvasWebcam = document.createElement('output');
 
 
-// canvas size
-canvasWebcam.width = webcam.offsetWidth;
-canvasWebcam.height = webcam.offsetHeight;
-canvasVideo.width = video.offsetWidth;
-canvasVideo.height = video.offsetHeight;
+// // canvas size
+// canvasWebcam.width = webcam.offsetWidth;
+// canvasWebcam.height = webcam.offsetHeight;
+// canvasVideo.width = video.offsetWidth;
+// canvasVideo.height = video.offsetHeight;
 
 // varients for detecting 17 keypoints of pose in frame
 // let detectorConfig, detector, context;
-let detectorConfig, detector;
-var videoPose, webcamPose;
 
-console.log(canvasVideo.width, canvasVideo.height)
+// console.log(canvasVideo.width, canvasVideo.height)
 
 
 // video play and pause
-function playVideo() { 
+function playVideo() {
     video.play();
     window.requestAnimationFrame(captureVideo);
-  } 
-  function pauseVideo() { 
-    video.pause(); 
-  } 
-
-
-// called automatically when the page is loaded
-window.onload = async function () {
-    // detect poses
-    // detectorConfig = {modelType: poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING};
-    detector = await poseDetection.createDetector(poseDetection.SupportedModels.MoveNet);
-    // detector = await poseDetection.createDetector(poseDetection.SupportedModels.MoveNet, detectorConfig); 
-    
-    // feed webcam
-    navigator.mediaDevices.getUserMedia({ video: true })
-    .then(function (stream) {
-        console.log('webcam works!')
-        console.log(stream)
-        webcam.srcObject = stream;
-    })
-    .catch(function (err0r) {
-        console.log("Something went wrong!");
-    });
-
-    window.requestAnimationFrame(capture);
+}
+function pauseVideo() {
+    video.pause();
 }
 
 
+// called automatically when the page is loaded
+// window.onload = async function () {
+//     // detect poses
+//     // detectorConfig = {modelType: poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING};
+//     detector = await poseDetection.createDetector(poseDetection.SupportedModels.MoveNet);
+//     // detector = await poseDetection.createDetector(poseDetection.SupportedModels.MoveNet, detectorConfig); 
+
+//     // feed webcam
+//     navigator.mediaDevices.getUserMedia({ video: true })
+//         .then(function (stream) {
+//             console.log('webcam works!')
+//             console.log(stream)
+//             webcam.srcObject = stream;
+//         })
+//         .catch(function (err0r) {
+//             console.log("Something went wrong!");
+//         });
+
+//     window.requestAnimationFrame(capture);
+
+// }
+
+//skeleton overlay
+function beginEstimatePosesStats() {
+    startInferenceTime = (performance || Date).now();
+}
+
+function endEstimatePosesStats() {
+    const endInferenceTime = (performance || Date).now();
+    inferenceTimeSum += endInferenceTime - startInferenceTime;
+    ++numInferences;
+
+    const panelUpdateMilliseconds = 1000;
+    if (endInferenceTime - lastPanelUpdate >= panelUpdateMilliseconds) {
+        const averageInferenceTime = inferenceTimeSum / numInferences;
+        inferenceTimeSum = 0;
+        numInferences = 0;
+        stats.customFpsPanel.update(
+            1000.0 / averageInferenceTime, 120 /* maxValue */);
+        lastPanelUpdate = endInferenceTime;
+    }
+}
+
+async function renderResult() {
+
+    if (camera.webcam.readyState < 2) {
+        await new Promise((resolve) => {
+            camera.webcam.onloadeddata = () => {
+                resolve(webcam);
+            };
+        });
+    }
+
+
+    // FPS only counts the time it takes to finish estimatePoses.
+    beginEstimatePosesStats();
+
+    const webcamPoses = await detector.estimatePoses(
+        camera.webcam,
+        { maxPoses: STATE.modelConfig.maxPoses, flipHorizontal: false });
+
+    endEstimatePosesStats();
+
+    camera.drawCtx();
+
+    // The null check makes sure the UI is not in the middle of changing to a
+    // different model. If during model change, the result is from an old model,
+    // which shouldn't be rendered.
+    if (webcamPoses.length > 0 && !STATE.isModelChanged) {
+        camera.drawResults(webcamPoses);
+    }
+}
+
+async function renderPrediction() {
+    await renderResult();
+    rafId = requestAnimationFrame(renderPrediction);
+};
+
+async function app() {
+
+    stats = setupStats();
+
+    detector = await poseDetection.createDetector(poseDetection.SupportedModels.MoveNet);
+
+    camera = await Camera.setupCamera(STATE.camera);
+
+    await setBackendAndEnvFlags(STATE.flags, STATE.backend);
+
+    renderPrediction();
+
+};
+
+
+
 async function capture() {
-    // context 용도 다시 찾기
-    var context = canvasWebcam.getContext('2d').drawImage(webcam, 0, 0, canvasWebcam.width, canvasWebcam.height);
-    webcamPose = await detector.estimatePoses(canvasWebcam);
-    // console.log("webcam detect : ", webcamPose);
+    // let drawWebcamImage = canvasWebcam.getContext('2d').drawImage(webcam, 0, 0, canvasWebcam.width, canvasWebcam.height);
+    webcamPoses = await detector.estimatePoses(camera.webcam, { maxPoses: STATE.modelConfig.maxPoses, flipHorizontal: false });
+    // console.log("webcam detect : ", webcamPoses);
     window.requestAnimationFrame(capture);
 }
 
@@ -71,23 +162,22 @@ async function capture() {
 // };
 
 async function captureVideo() {
-    // context 용도 다시 찾기
-    var context = canvasVideo.getContext('2d').drawImage(video, 0, 0, canvasVideo.width, canvasVideo.height);
-    videoPose = await detector.estimatePoses(canvasVideo);
-    // console.log("video detect : ", videoPose[0].keypoints);
+    // let drawVideoImage = canvasVideo.getContext('2d').drawImage(video, 0, 0, canvasVideo.width, canvasVideo.height);
+    videoPoses = await detector.estimatePoses(video, { maxPoses: STATE.modelConfig.maxPoses, flipHorizontal: false });
+    // console.log("video detect : ", videoPoses[0].keypoints);
 
-    var weightedDistance = poseSimilarity(webcamPose[0].keypoints, videoPose[0].keypoints);
+    weightedDistance = poseSimilarity(webcamPoses[0].keypoints, videoPoses[0].keypoints);
 
     console.log(weightedDistance);
     window.requestAnimationFrame(captureVideo);
 }
 
-function weightedDistanceMatching(vectorPose1XY, vectorPose2XY, vectorConfidences){
-    const summation1 = 1/vectorConfidences[vectorConfidences.length -1];
+function weightedDistanceMatching(vectorPose1XY, vectorPose2XY, vectorConfidences) {
+    const summation1 = 1 / vectorConfidences[vectorConfidences.length - 1];
     var summation2 = 0;
 
-    for (var i = 0; i<vectorPose1XY.length; i++){
-        var confIndex = Math.floor(i/2); 
+    for (var i = 0; i < vectorPose1XY.length; i++) {
+        var confIndex = Math.floor(i / 2);
         summation2 += vectorConfidences[confIndex] * Math.abs(vectorPose1XY[i] - vectorPose2XY[i]);
     }
     return summation1 * summation2;
@@ -99,7 +189,7 @@ function convertPoseToVector(pose) {
     var translateX = Number.POSITIVE_INFINITY;
     var translateY = Number.POSITIVE_INFINITY;
     var scaler = Number.NEGATIVE_INFINITY;
-    
+
     var vectorScoresSum = 0;
     var vectorScores = [];
 
@@ -167,10 +257,10 @@ function L2Normalization(vectorPoseXY) {
     });
     absVectorPoseXY = Math.sqrt(absVectorPoseXY);
     return vectorPoseXY.map(function (position) {
-        return position / absVectorPoseXY;s
+        return position / absVectorPoseXY; s
     });
 }
-function vectorizeAndNormalize(pose){
+function vectorizeAndNormalize(pose) {
     var _a = convertPoseToVector(pose);
 
     vectorPoseXY = _a[0];
@@ -195,3 +285,5 @@ function poseSimilarity(pose1, pose2) {
     // if strategy is given by the string form
     return weightedDistanceMatching(vectorPose1XY, vectorPose2XY, vectorPose1Scores);
 }
+
+app();
