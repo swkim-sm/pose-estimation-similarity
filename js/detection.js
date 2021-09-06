@@ -34,6 +34,9 @@ var canvasWebcam = document.createElement('output');
 var weightedDistance;
 var webcamPoses, videoPoses;
 
+var maxScore = 0;
+var myScore = 0;
+
 
 // // canvas size
 // canvasWebcam.width = webcam.offsetWidth;
@@ -79,6 +82,24 @@ var webcamPoses, videoPoses;
 
 // }
 
+// score
+function getScore(weight){
+    maxScore += 3;
+    if (weight <= 0.7){
+        myScore += 3;
+    }
+    else if(weight <= 1){
+        myScore += 2;
+    }
+    else if(weight <= 1.3){
+        myScore += 1;
+    }
+}
+
+function getFinalScore(score){
+    return 100 * myScore / maxScore;
+}
+
 //skeleton overlay
 function beginEstimatePosesStats() {
     startInferenceTime = (performance || Date).now();
@@ -114,9 +135,7 @@ async function renderResult() {
     // FPS only counts the time it takes to finish estimatePoses.
     beginEstimatePosesStats();
 
-    webcamPoses = await detector.estimatePoses(
-        camera.webcam,
-        { flipHorizontal: false });
+    webcamPoses = await detector.estimatePoses(camera.webcam,{ flipHorizontal: false });
 
 //maxPoses: STATE.modelConfig.maxPoses,
     videoPoses = await detector.estimatePoses(video, {flipHorizontal: false });
@@ -133,7 +152,8 @@ async function renderResult() {
 
         if(videoPoses.length > 0){
             weightedDistance = poseSimilarity(videoPoses[0].keypoints, webcamPoses[0].keypoints);
-            console.log("weight:", weightedDistance);
+            getScore(weightedDistance);
+            // console.log("weight:", weightedDistance);
         }
 
     }
