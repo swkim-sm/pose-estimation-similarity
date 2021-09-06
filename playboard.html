@@ -388,8 +388,8 @@
                                         <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                                             aria-labelledby="dropdownMenuLink">
                                             <div class="dropdown-header">Dropdown Header:</div>
-                                            <a class="dropdown-item" href="#">Action</a>
-                                            <a class="dropdown-item" href="#">Another action</a>
+                                            <a class="dropdown-item" href="#" onclick="setVideo(1); return false;">전체 안무</a>
+                                            <a class="dropdown-item" href="#" onclick="setVideo(2); return false;">부분 안무</a>
                                             <div class="dropdown-divider"></div>
                                             <a class="dropdown-item" href="#">Something else here</a>
                                         </div>
@@ -401,7 +401,7 @@
                                     <!-- <canvas id="myAreaChart"> -->
 
                                     <video id="video" width=100% height=100% crossorigin='anonymous'>
-                                        <source src="video/video.mp4" type="video/mp4" crossorigin='anonymous'>
+                                        <source id="videoSrc" src="video/video2.mp4" type="video/mp4" crossorigin='anonymous'>
 
                                         HTML5 video
                                     </video>
@@ -535,13 +535,37 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stats.js/r16/Stats.min.js"></script>
 
     <script type="module" src="./js/detection.js"></script>
-    <script>
+    <script type="text/javascript">
         function playVideo() {
             video.play();
         }
         function pauseVideo() {
             video.pause();
-    }
+        }
+        function setVideo(num){
+            // if(num==1){document.getElementById("videoSrc").setAttribute("src", "video/video.mp4");}
+            // else{document.getElementById("videoSrc").setAttribute("src", "video/video2.mp4");}
+            // alert(document.getElementById("videoSrc").getAttribute("src"));
+        
+            if(num==1){
+                let _video = document.querySelector('videoSrc');
+                _video.removeAttribute('src'); // src 프로퍼티를 제거
+                _video.src = 'video/video.mp4'; // 다른 미디어로 소스 변경
+                _video.load(); // 새로운 정보를 다시 로드
+            }
+            else{
+                let _video = document.querySelector('videoSrc');
+                _video.removeAttribute('src'); // src 프로퍼티를 제거
+                _video.src = 'video/video2.mp4';
+                _video.load(); // 새로운 정보를 다시 로드
+            }
+            // _video.load(); // 새로운 정보를 다시 로드
+            // _video.removeAttribute('src'); // src 프로퍼티를 제거
+            // _video.src = 'b.mp4'; // 다른 미디어로 소스 변경
+            // _video.load(); // 새로운 정보를 다시 로드
+
+            // _video.play(); // 잘 동작함
+        }
     </script>
 
 </body>

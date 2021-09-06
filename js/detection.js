@@ -30,7 +30,7 @@ canvasVideo.height = video.offsetHeight;
 
 // varients for webcam
 var webcam = document.getElementById('webcam');
-var canvasWebcam = document.createElement('output');
+var canvasWebcam = document.createElement('output'); //score 보여줄 태그
 
 var weightedDistance;
 var webcamPoses, videoPoses;
@@ -154,7 +154,7 @@ async function renderResult() {
         if (videoPoses.length > 0) {
             weightedDistance = poseSimilarity(videoPoses[0].keypoints, webcamPoses[0].keypoints);
             getScore(weightedDistance);
-            // console.log("weight:", weightedDistance);
+            console.log("score:", myScore, maxScore);
         }
 
     }
