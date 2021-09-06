@@ -13,6 +13,7 @@ import { STATE } from './params.js';
 import { setupStats } from './stats_panel.js';
 import { setBackendAndEnvFlags } from './util.js';
 
+
 let detector, camera, stats;
 let rafId, videoContext;
 // let detectorConfig;
@@ -137,8 +138,8 @@ async function renderResult() {
 
     webcamPoses = await detector.estimatePoses(camera.webcam,{ flipHorizontal: false });
 
-//maxPoses: STATE.modelConfig.maxPoses,
-    videoPoses = await detector.estimatePoses(video, {flipHorizontal: false });
+    //maxPoses: STATE.modelConfig.maxPoses,
+    videoPoses = await detector.estimatePoses(video, { flipHorizontal: false });
 
     endEstimatePosesStats();
 
@@ -150,7 +151,7 @@ async function renderResult() {
     if (webcamPoses.length > 0 && !STATE.isModelChanged) {
         camera.drawResults(webcamPoses);
 
-        if(videoPoses.length > 0){
+        if (videoPoses.length > 0) {
             weightedDistance = poseSimilarity(videoPoses[0].keypoints, webcamPoses[0].keypoints);
             getScore(weightedDistance);
             // console.log("weight:", weightedDistance);
@@ -179,12 +180,12 @@ async function app() {
 };
 
 
-function weightedDistanceMatching(vectorPose1XY, vectorPose2XY, vectorConfidences){
-    const summation1 = 1/vectorConfidences[vectorConfidences.length -1];
+function weightedDistanceMatching(vectorPose1XY, vectorPose2XY, vectorConfidences) {
+    const summation1 = 1 / vectorConfidences[vectorConfidences.length - 1];
     var summation2 = 0;
 
-    for (var i = 0; i<vectorPose1XY.length; i++){
-        var confIndex = Math.floor(i/2); 
+    for (var i = 0; i < vectorPose1XY.length; i++) {
+        var confIndex = Math.floor(i / 2);
         summation2 += vectorConfidences[confIndex] * Math.abs(vectorPose1XY[i] - vectorPose2XY[i]);
     }
     return summation1 * summation2;
@@ -196,7 +197,7 @@ function convertPoseToVector(pose) {
     var translateX = Number.POSITIVE_INFINITY;
     var translateY = Number.POSITIVE_INFINITY;
     var scaler = Number.NEGATIVE_INFINITY;
-    
+
     var vectorScoresSum = 0;
     var vectorScores = [];
 
@@ -264,10 +265,10 @@ function L2Normalization(vectorPoseXY) {
     });
     absVectorPoseXY = Math.sqrt(absVectorPoseXY);
     return vectorPoseXY.map(function (position) {
-        return position / absVectorPoseXY;s
+        return position / absVectorPoseXY; s
     });
 }
-function vectorizeAndNormalize(pose){
+function vectorizeAndNormalize(pose) {
     var _a = convertPoseToVector(pose);
     var vectorPoseXY = _a[0];
     var vectorPoseTransform = _a[1];
