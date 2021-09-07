@@ -53,6 +53,7 @@ function showScore(e) {
 }
 
 
+
 // // canvas size
 // canvasWebcam.width = webcam.offsetWidth;
 // canvasWebcam.height = webcam.offsetHeight;
@@ -96,28 +97,37 @@ function showScore(e) {
 //     window.requestAnimationFrame(capture);
 
 // }
-
+let great_cnt = 0, good_cnt = 0, soso_cnt = 0, bad_cnt = 0;
 // score
-function getScore(weight){
+function getScore(weight) {
     maxScore += 3;
-    if (weight <= 0.08){
+    if (weight <= 0.08) {
         myScore += 3;
+        great_cnt++;
         console.log("great");
     }
-    else if(weight <= 0.11){
+    else if (weight <= 0.11) {
         myScore += 2;
+        good_cnt++;
         console.log("good");
     }
-    else if(weight <= 0.15){
+    else if (weight <= 0.15) {
         myScore += 1;
+        soso_cnt++;
         console.log("soso");
     }
-    else{
+    else {
+        bad_cnt++;
         console.log("bad");
     }
+    $('.score_text').text(myScore)
+    $('.great').text(great_cnt)
+    $('.good').text(good_cnt)
+    $('.soso').text(soso_cnt)
+    $('.bad').text(bad_cnt)
 }
 
-function getFinalScore(){
+function getFinalScore() {
     return 100 * myScore / maxScore;
 }
 
@@ -156,7 +166,7 @@ async function renderResult() {
     // FPS only counts the time it takes to finish estimatePoses.
     beginEstimatePosesStats();
 
-    webcamPoses = await detector.estimatePoses(camera.webcam,{ flipHorizontal: false });
+    webcamPoses = await detector.estimatePoses(camera.webcam, { flipHorizontal: false });
 
     //maxPoses: STATE.modelConfig.maxPoses,
     videoPoses = await detector.estimatePoses(video, { flipHorizontal: false });
@@ -171,7 +181,7 @@ async function renderResult() {
     if (webcamPoses.length > 0 && !STATE.isModelChanged) {
         camera.drawResults(webcamPoses);
 
-        if (video.paused) { videoFlag = false; } 
+        if (video.paused) { videoFlag = false; }
         else { videoFlag = true; }
 
         if (videoFlag && videoPoses.length > 0) {

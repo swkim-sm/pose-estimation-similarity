@@ -388,8 +388,10 @@
                                         <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                                             aria-labelledby="dropdownMenuLink">
                                             <div class="dropdown-header">Dropdown Header:</div>
-                                            <a class="dropdown-item" href="#" onclick="setVideo(1); return false;">전체 안무</a>
-                                            <a class="dropdown-item" href="#" onclick="setVideo(2); return false;">부분 안무</a>
+                                            <a class="dropdown-item" href="#" onclick="setVideo(1); return false;">전체
+                                                안무</a>
+                                            <a class="dropdown-item" href="#" onclick="setVideo(2); return false;">부분
+                                                안무</a>
                                             <div class="dropdown-divider"></div>
                                             <a class="dropdown-item" href="#">Something else here</a>
                                         </div>
@@ -400,7 +402,8 @@
                                     <!-- <div class="chart-area"> -->
                                     <!-- <canvas id="myAreaChart"> -->
 
-                                    <video id="video" width=100% height=100% src="video/video2.mp4" type="video/mp4" crossorigin='anonymous'>
+                                    <video id="video" width=100% height=100% src="video/video2.mp4" type="video/mp4"
+                                        crossorigin='anonymous'>
                                         <!-- <source src="video/video2.mp4" type="video/mp4" crossorigin='anonymous'> -->
 
                                         HTML5 video
@@ -426,7 +429,7 @@
                                 <!-- Card Header - Dropdown -->
                                 <div
                                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">User A</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">🕺내 모습💃</h6>
                                     <div class="dropdown no-arrow">
                                         <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -452,6 +455,59 @@
                                     width: auto;
                                     height: auto;
                                     "></video>
+
+                                </div>
+                                <div id='score'>
+                                    <div class='row'>
+                                        <div class='col text-center'>
+                                            <div class='h3 text-white bg-dark font-weight-bold text-uppercase mb-1'>
+                                                Total :
+                                                <span class='score_cnt score score_text'></span>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class='row'>
+                                        <div class='col-xl-3'>
+                                            <div class='card text-center'>
+                                                <div
+                                                    class='h4 text-white bg-success font-weight-bold text-uppercase mb-1'>
+                                                    Great :
+                                                    <span class='score_cnt score great '></span>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class='col-xl-3'>
+                                            <div class='card  text-center'>
+                                                <div class='h4 text-white bg-info font-weight-bold text-uppercase mb-1'>
+                                                    Good :
+                                                    <span class='score_cnt score good'></span>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class='col-xl-3'>
+                                            <div class='card  text-center'>
+                                                <div
+                                                    class='h4 text-white font-weight-bold bg-warning text-uppercase mb-1'>
+                                                    Soso :
+                                                    <span class='score_cnt score soso'></span>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class='col-xl-3'>
+                                            <div class='card  text-center'>
+                                                <div
+                                                    class='h4 text-white font-weight-bold bg-danger text-uppercase mb-1'>
+                                                    Bad :
+                                                    <span class='score_cnt score bad'></span>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -549,7 +605,7 @@
         //     'or 2) no further data is available.');
         // video.load();
         // });
-        
+
         // function setVideo(num){
 
         //     video.onloadeddata = function() {
