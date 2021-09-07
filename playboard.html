@@ -400,8 +400,8 @@
                                     <!-- <div class="chart-area"> -->
                                     <!-- <canvas id="myAreaChart"> -->
 
-                                    <video id="video" width=100% height=100% crossorigin='anonymous'>
-                                        <source id="videoSrc" src="video/video2.mp4" type="video/mp4" crossorigin='anonymous'>
+                                    <video id="video" width=100% height=100% src="video/video2.mp4" type="video/mp4" crossorigin='anonymous'>
+                                        <!-- <source src="video/video2.mp4" type="video/mp4" crossorigin='anonymous'> -->
 
                                         HTML5 video
                                     </video>
@@ -536,39 +536,53 @@
 
     <script type="module" src="./js/detection.js"></script>
     <script type="text/javascript">
+        const video = document.querySelector('video');
+
         function playVideo() {
             video.play();
         }
         function pauseVideo() {
             video.pause();
         }
-<<<<<<< HEAD
-        function setVideo(num){
-            // if(num==1){document.getElementById("videoSrc").setAttribute("src", "video/video.mp4");}
-            // else{document.getElementById("videoSrc").setAttribute("src", "video/video2.mp4");}
-            // alert(document.getElementById("videoSrc").getAttribute("src"));
+        // video.addEventListener('ended', (event) => {
+        // console.log('Video stopped either because 1) it was over, ' +
+        //     'or 2) no further data is available.');
+        // video.load();
+        // });
         
-            if(num==1){
-                let _video = document.querySelector('videoSrc');
-                _video.removeAttribute('src'); // src 프로퍼티를 제거
-                _video.src = 'video/video.mp4'; // 다른 미디어로 소스 변경
-                _video.load(); // 새로운 정보를 다시 로드
-            }
-            else{
-                let _video = document.querySelector('videoSrc');
-                _video.removeAttribute('src'); // src 프로퍼티를 제거
-                _video.src = 'video/video2.mp4';
-                _video.load(); // 새로운 정보를 다시 로드
-            }
-            // _video.load(); // 새로운 정보를 다시 로드
-            // _video.removeAttribute('src'); // src 프로퍼티를 제거
-            // _video.src = 'b.mp4'; // 다른 미디어로 소스 변경
-            // _video.load(); // 새로운 정보를 다시 로드
+        // function setVideo(num){
 
-            // _video.play(); // 잘 동작함
-        }
-=======
->>>>>>> 416ba1f157b341d2142b2b5c79fa9909c1fdfec6
+        //     video.onloadeddata = function() {
+        //         alert("Browser has loaded the current frame");
+        //     };
+        //     // video.removeAttribute('src');
+        //     // video.src = './video/video'+num+'.mp4';
+        //     // video.load();
+
+        //     // if(num==1){document.getElementById("videoSrc").setAttribute("src", "video/video.mp4");}
+        //     // else{document.getElementById("videoSrc").setAttribute("src", "video/video2.mp4");}
+        //     // alert(document.getElementById("videoSrc").getAttribute("src"));
+        //     // let _video = document.querySelector('#videoSrc');
+        //     // if(num==1){
+        //     //     // let _video = document.querySelector('videoSrc');
+        //     //     video.removeAttribute('src'); // src 프로퍼티를 제거
+        //     //     video.src = 'video/video.mp4'; // 다른 미디어로 소스 변경
+        //     //     video.load(); // 새로운 정보를 다시 로드
+        //     // }
+        //     // else{
+        //     //     // let _video = document.querySelector('videoSrc');
+        //     //     video.removeAttribute('src'); // src 프로퍼티를 제거
+        //     //     video.src = 'video/video2.mp4';
+        //     //     video.load(); // 새로운 정보를 다시 로드
+        //     // }
+        //     // _video.load(); // 새로운 정보를 다시 로드
+        //     // _video.removeAttribute('src'); // src 프로퍼티를 제거
+        //     // _video.src = 'b.mp4'; // 다른 미디어로 소스 변경
+        //     // _video.load(); // 새로운 정보를 다시 로드
+
+        //     // _video.play(); // 잘 동작함
+        // }
+
     </script>
 
 </body>

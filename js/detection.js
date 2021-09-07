@@ -25,6 +25,7 @@ let inferenceTimeSum = 0, lastPanelUpdate = 0;
 var video = document.getElementById("video");
 var canvasVideo = document.createElement('canvas');
 
+
 canvasVideo.width = video.offsetWidth;
 canvasVideo.height = video.offsetHeight;
 
@@ -37,6 +38,19 @@ var webcamPoses, videoPoses;
 
 var maxScore = 0;
 var myScore = 0;
+
+var videoFlag = false;
+
+
+video.addEventListener('ended', showScore, false);
+// document.getElementById('video').addEventListener('ended',myHandler,false);
+function showScore(e) {
+    //remove video here
+    //add menu here
+    alert(maxScore, myScore);
+    var finalScore = getFinalScore();
+    alert(finalScore);
+}
 
 
 // // canvas size
@@ -86,18 +100,24 @@ var myScore = 0;
 // score
 function getScore(weight){
     maxScore += 3;
-    if (weight <= 0.7){
+    if (weight <= 0.08){
         myScore += 3;
+        console.log("great");
     }
-    else if(weight <= 1){
+    else if(weight <= 0.11){
         myScore += 2;
+        console.log("good");
     }
-    else if(weight <= 1.3){
+    else if(weight <= 0.15){
         myScore += 1;
+        console.log("soso");
+    }
+    else{
+        console.log("bad");
     }
 }
 
-function getFinalScore(score){
+function getFinalScore(){
     return 100 * myScore / maxScore;
 }
 
@@ -151,10 +171,13 @@ async function renderResult() {
     if (webcamPoses.length > 0 && !STATE.isModelChanged) {
         camera.drawResults(webcamPoses);
 
-        if (videoPoses.length > 0) {
+        if (video.paused) { videoFlag = false; } 
+        else { videoFlag = true; }
+
+        if (videoFlag && videoPoses.length > 0) {
             weightedDistance = poseSimilarity(videoPoses[0].keypoints, webcamPoses[0].keypoints);
             getScore(weightedDistance);
-            console.log("score:", myScore, maxScore);
+            console.log("score:", weightedDistance, myScore, maxScore);
         }
 
     }
