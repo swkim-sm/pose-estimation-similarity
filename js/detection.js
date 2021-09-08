@@ -47,9 +47,7 @@ video.addEventListener('ended', showScore, false);
 function showScore(e) {
     //remove video here
     //add menu here
-    alert(maxScore, myScore);
     var finalScore = getFinalScore();
-    alert(finalScore);
 }
 
 
@@ -97,30 +95,35 @@ function showScore(e) {
 //     window.requestAnimationFrame(capture);
 
 // }
+
+
+// 최종 Score 계산 
 let great_cnt = 0, good_cnt = 0, soso_cnt = 0, bad_cnt = 0;
-// score
+
 function getScore(weight) {
     maxScore += 3;
     if (weight <= 0.08) {
         myScore += 3;
         great_cnt++;
-        console.log("great");
+        // console.log("great");
     }
     else if (weight <= 0.11) {
         myScore += 2;
         good_cnt++;
-        console.log("good");
+        // console.log("good");
     }
     else if (weight <= 0.15) {
         myScore += 1;
         soso_cnt++;
-        console.log("soso");
+        // console.log("soso");
     }
     else {
         bad_cnt++;
-        console.log("bad");
+        // console.log("bad");
     }
-    $('.score_text').text(myScore)
+
+
+    $('.score_text').text(parseInt(getFinalScore()))
     $('.great').text(great_cnt)
     $('.good').text(good_cnt)
     $('.soso').text(soso_cnt)
@@ -167,8 +170,6 @@ async function renderResult() {
     beginEstimatePosesStats();
 
     webcamPoses = await detector.estimatePoses(camera.webcam, { flipHorizontal: false });
-
-    //maxPoses: STATE.modelConfig.maxPoses,
     videoPoses = await detector.estimatePoses(video, { flipHorizontal: false });
 
     endEstimatePosesStats();
@@ -315,17 +316,18 @@ function vectorizeAndNormalize(pose) {
 }
 
 function poseSimilarity(pose1, pose2) {
-    // merge options
     var _a = vectorizeAndNormalize(pose1)
     var vectorPose1XY = _a[0];
     var vectorPose1Scores = _a[1];
-    // console.log("pose1", pose1);
-    // console.log("pose2", pose2);
 
     var vectorPose2XY = vectorizeAndNormalize(pose2)[0];
-    // console.log("compare", vectorPose1XY, vectorPose2XY)
-    // execute strategy
-    // if strategy is given by the string form
     return weightedDistanceMatching(vectorPose1XY, vectorPose2XY, vectorPose1Scores);
 }
 app();
+
+// function poseSimilarity(pose1, pose2);
+// └ function vectorizeAndNormalize(pose);
+// │   └ function convertPoseToVector(pose);
+// │   └ function scaleAndTranslate(vectorPoseXY, vectorPoseTransform);
+// │   └ function L2Normalization(vectorPoseXY);
+// └ function weightedDistanceMatching(vectorPose1XY, vectorPose2XY, vectorConfidences);
