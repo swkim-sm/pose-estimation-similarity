@@ -39,12 +39,15 @@
         "@tensorflow/tfjs-converter": "^3.8.0",
         "@tensorflow/tfjs-core": "^3.8.0",
         "bootstrap": "4.6.0",
+        "browserify": "^17.0.0",
         "chart.js": "2.9.4",
         "datatables.net-bs4": "1.10.24",
+        "express": "^4.17.1",
         "jquery": "3.6.0",
         "jquery.easing": "^1.4.1",
         "mysql": "^2.18.1",
         "sqlite3": "^5.0.2",
+        "uniq": "^1.0.1",
         "yarn": "^1.22.11"
     },
     "devDependencies": {

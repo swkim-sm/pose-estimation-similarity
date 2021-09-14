@@ -1,3 +1,4 @@
+
 // const sqlite3 = require('sqlite3').verbose();
 
 // // open database in memory
@@ -18,7 +19,7 @@
 
 // const sqlite3 = require('sqlite3').verbose();
 
-// let db = new sqlite3.Database('./db/chinook.db');
+// let db = new sqlite3.Database('./db/test.db');
 
 // db.run('CREATE TABLE student(id integer primary key, name text not null, email text unique)');
 
@@ -30,7 +31,7 @@
 // let db = new sqlite3.Database('./db/chinook.db');
 
 // // insert one row into the student table
-// db.run(`INSERT INTO student(name, email) VALUES('이종현', '1428ksu@gmail.com')`, function (err) {
+// db.run(`INSERT INTO student(name, email) VALUES('김서원', '1234ksu@gmail.com')`, function (err) {
 //     if (err) {
 //         return console.log(err.message);
 //     }
@@ -41,22 +42,21 @@
 // // close the database connection
 // db.close();
 
-const sqlite3 = require('sqlite3').verbose();
+const sqlite3 = require('./sqlite3').verbose();
 
-// open the database
-let db = new sqlite3.Database('./db/chinook.db');
+// // open the database
+// let db = new sqlite3.Database('./db/chinook.db');
 
-let sql = `SELECT * FROM student
-           WHERE name = '이종현'`;
+// let sql = `SELECT * FROM student`;
 
-db.all(sql, [], (err, rows) => {
-  if (err) {
-    throw err;
-  }
-  rows.forEach((row) => {
-    console.log(row);
-  });
-});
+// db.all(sql, [], (err, rows) => {
+//   if (err) {
+//     throw err;
+//   }
+//   rows.forEach((row) => {
+//     console.log(row);
+//   });
+// });
 
-// close the database connection
-db.close();
+// // close the database connection
+// db.close();

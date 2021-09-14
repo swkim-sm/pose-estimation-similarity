@@ -386,7 +386,7 @@
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                 최고 점수</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">90점</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><span id="best">90</span>점</div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -404,7 +404,7 @@
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                                 최근 점수</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">60점</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><span id="last">62</span>점</div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -451,7 +451,7 @@
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                                 총 시도</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">12</div>
+                                            <div id = "try_num" class="h5 mb-0 font-weight-bold text-gray-800">12</div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-comments fa-2x text-gray-300"></i>
@@ -756,10 +756,26 @@
 
                 <!-- Page level plugins -->
                 <script src="vendor/chart.js/Chart.min.js"></script>
+                <script>
+                    var lastData = 0
+                    var last = document.getElementById("last");
+                    var try_num = document.getElementById("try_num");
+                    var best = document.getElementById("best");
+
+                    if(localStorage.getItem('last_score')){ 
+                        lastData = localStorage.getItem('last_score');
+                        last.innerText = lastData;
+                        if (parseInt(lastData) > parseInt(best.innerText)){
+                            best.innerText = lastData
+                        }
+                    }
+                    // alert(lastData);
+                </script>
 
                 <!-- Page level custom scripts -->
                 <script src="js/demo/chart-area-demo.js"></script>
                 <script src="js/demo/chart-pie-demo.js"></script>
+
 
 </body>
 

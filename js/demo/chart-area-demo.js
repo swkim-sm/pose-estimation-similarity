@@ -27,14 +27,23 @@ function number_format(number, decimals, dec_point, thousands_sep) {
   return s.join(dec);
 }
 
+function get_last_score(){
+  var lastData = 70;
+  if(localStorage.getItem('last_score')){ 
+    lastData = localStorage.getItem('last_score');
+  }
+  return lastData;
+}
+
 // Area Chart Example
 var ctx = document.getElementById("myAreaChart");
+var last_score = document.getElementById("last");
 var myLineChart = new Chart(ctx, {
   type: 'line',
   data: {
     labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
     datasets: [{
-      label: "Earnings",
+      label: "Scores",
       lineTension: 0.3,
       backgroundColor: "rgba(78, 115, 223, 0.05)",
       borderColor: "rgba(78, 115, 223, 1)",
@@ -47,7 +56,7 @@ var myLineChart = new Chart(ctx, {
       pointHitRadius: 10,
       pointBorderWidth: 2,
       // data: [0, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 30000, 25000, 40000],
-      data: [0, 10, 3, 25, 30, 35, 65, 40, 70, 80, 70, 90],
+      data: [0, 10, 3, 25, 30, 35, 65, 40, 78, 70, 90, parseInt(last.innerText)],
 
     }],
   },
@@ -112,7 +121,7 @@ var myLineChart = new Chart(ctx, {
       callbacks: {
         label: function(tooltipItem, chart) {
           var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-          return datasetLabel + ': $' + number_format(tooltipItem.yLabel);
+          return datasetLabel + ' : ' + number_format(tooltipItem.yLabel) + '점' ;
         }
       }
     }

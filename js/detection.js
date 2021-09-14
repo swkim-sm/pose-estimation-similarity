@@ -48,6 +48,8 @@ function showScore(e) {
     //remove video here
     //add menu here
     var finalScore = getFinalScore();
+    localStorage.setItem('last_score',parseInt(finalScore));
+    console.log(localStorage);
 }
 
 
@@ -188,7 +190,7 @@ async function renderResult() {
         if (videoFlag && videoPoses.length > 0) {
             weightedDistance = poseSimilarity(videoPoses[0].keypoints, webcamPoses[0].keypoints);
             getScore(weightedDistance);
-            console.log("score:", weightedDistance, myScore, maxScore);
+            // console.log("score:", weightedDistance, myScore, maxScore);
         }
 
     }
