@@ -12,16 +12,13 @@ To begin using, choose one of the following options to get started:
 
 After installation, run `npm install` and then run `npm start` which will open up a preview of the template in your default browser.
 
-### Gulp Tasks
+## Skill stack
+![skill-stack](https://user-images.githubusercontent.com/58676931/152530139-d24bace9-f6f2-49b7-b0ba-a0a5d77fb90f.jpg)
 
-* `gulp` the default task that builds everything
-* `gulp watch` browserSync opens the project in your default browser and live reloads when changes are made
-* `gulp css` compiles SCSS files into CSS and minifies the compiled CSS
-* `gulp js` minifies the themes JS file
-* `gulp vendor` copies dependencies from node_modules to the vendor directory
+## Demo Capture
 
-You must have npm installed globally in order to use this build environment. This theme was built using node v11.6.0 and the Gulp CLI v2.0.1. If Gulp is not running properly after running `npm install`, you may need to update node and/or the Gulp CLI locally.
-
+### Playboard
+![playboard](https://user-images.githubusercontent.com/58676931/152529533-b5d3eb8b-d02e-40c5-8372-f988a0d91924.jpg)
 ## Template Copyright and License
 
 Copyright 2013-2021 Start Bootstrap LLC. Code released under the [MIT](https://github.com/StartBootstrap/startbootstrap-resume/blob/master/LICENSE) license.
