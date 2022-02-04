@@ -1,13 +1,3 @@
-// import '@tensorflow/tfjs-backend-webgl';
-// import '@mediapipe/pose';
-
-// import * as tfjsWasm from '@tensorflow/tfjs-backend-wasm';
-
-// tfjsWasm.setWasmPaths(
-// `https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm@${tfjsWasm.version_wasm}/dist/`);
-
-// import * as posedetection from '@tensorflow-models/pose-detection';
-
 import { Camera } from './camera.js';
 import { STATE } from './params.js';
 import { setupStats } from './stats_panel.js';
@@ -16,8 +6,6 @@ import { setBackendAndEnvFlags } from './util.js';
 
 let detector, camera, stats;
 let rafId, videoContext;
-// let detectorConfig;
-// let videoPoses, webcamPoses;
 let startInferenceTime, numInferences = 0;
 let inferenceTimeSum = 0, lastPanelUpdate = 0;
 
@@ -49,52 +37,6 @@ function showScore(e) {
     //add menu here
     var finalScore = getFinalScore();
 }
-
-
-
-// // canvas size
-// canvasWebcam.width = webcam.offsetWidth;
-// canvasWebcam.height = webcam.offsetHeight;
-// canvasVideo.width = video.offsetWidth;
-// canvasVideo.height = video.offsetHeight;
-
-// varients for detecting 17 keypoints of pose in frame
-// let detectorConfig, detector, context;
-
-// console.log(canvasVideo.width, canvasVideo.height)
-
-
-// // video play and pause
-// function playVideo() {
-//     video.play();
-//     window.requestAnimationFrame(captureVideo);
-// }
-// function pauseVideo() {
-//     video.pause();
-// }
-
-
-// called automatically when the page is loaded
-// window.onload = async function () {
-//     // detect poses
-//     // detectorConfig = {modelType: poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING};
-//     detector = await poseDetection.createDetector(poseDetection.SupportedModels.MoveNet);
-//     // detector = await poseDetection.createDetector(poseDetection.SupportedModels.MoveNet, detectorConfig); 
-
-//     // feed webcam
-//     navigator.mediaDevices.getUserMedia({ video: true })
-//         .then(function (stream) {
-//             console.log('webcam works!')
-//             console.log(stream)
-//             webcam.srcObject = stream;
-//         })
-//         .catch(function (err0r) {
-//             console.log("Something went wrong!");
-//         });
-
-//     window.requestAnimationFrame(capture);
-
-// }
 
 
 // 최종 Score 계산 
